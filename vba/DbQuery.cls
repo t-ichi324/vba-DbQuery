@@ -11,7 +11,6 @@ Option Compare Database
 Option Explicit
 '-----------------------
 ' auth : t.ichi
-' ver  : 2019-05-01
 '-----------------------
 
 Public ModeDebug As Boolean
