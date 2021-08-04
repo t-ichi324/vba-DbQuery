@@ -20,8 +20,8 @@ Public LastError As String  'ç≈å„Ç…î≠ê∂ÇµÇΩErrorÇäiî[
 Public AllowNull As Boolean
 Private mLastSql As String
 
-Private mCon As Dao.Database
-Private mWork As Dao.Workspace
+Private mCon As DAO.Database
+Private mWork As DAO.Workspace
 Private mTable As String
 Private mWhere As String
 Private mOrders As String
@@ -105,33 +105,33 @@ Public Property Get LastSql() As String: LastSql = mLastSql: End Property
 Private Property Let LastSql(ByVal sql As String)
     mLastSql = sql
     If ModeDebug Or ModeDebugLog Then
-        Dim log As String
-        log = "# " & Now & vbCrLf
-        log = log & "[DbQuery]DebugMode ======" & vbCrLf
-        log = log & sql & vbCrLf
-        log = log & "========================="
-        If ModeDebug Then: Debug.Print log
-        If ModeDebugLog Then: AppendLog "debug", log
+        Dim Log As String
+        Log = "# " & Now & vbCrLf
+        Log = Log & "[DbQuery]DebugMode ======" & vbCrLf
+        Log = Log & sql & vbCrLf
+        Log = Log & "========================="
+        If ModeDebug Then: Debug.Print Log
+        If ModeDebugLog Then: AppendLog "debug", Log
     End If
 End Property
 Private Sub ErrorProc(ByVal sql As String)
-    Dim log As String
+    Dim Log As String
     LastError = err.Description & vbCrLf & "-------------------------" & vbCrLf & sql & vbCrLf
-    log = "# " & Now & vbCrLf
-    log = log & "[DbQuery]ErrorProc ======" & vbCrLf
-    log = log & LastError
-    log = log & "========================="
-    Debug.Print log
-    If ModeErrorLog Then: AppendLog "error", log
+    Log = "# " & Now & vbCrLf
+    Log = Log & "[DbQuery]ErrorProc ======" & vbCrLf
+    Log = Log & LastError
+    Log = Log & "========================="
+    Debug.Print Log
+    If ModeErrorLog Then: AppendLog "error", Log
     Clear
 End Sub
-Private Sub AppendLog(ByVal fName As String, ByVal log As String)
+Private Sub AppendLog(ByVal fName As String, ByVal Log As String)
 On Error GoTo ex:
     Dim fso As Object
     Dim f As Object
     Set fso = CreateObject("Scripting.FileSystemObject")
     Set f = fso.OpenTextFile(LOG_DIR & "." & fName & ".log", 8, True)
-    Call f.WriteLine(log & vbCrLf)
+    Call f.WriteLine(Log & vbCrLf)
 ex:
     If Not fso Is Nothing Then: Set fso = Nothing
     If Not f Is Nothing Then: f.Close: Set f = Nothing
@@ -159,7 +159,7 @@ End Function
 
 '//////////////////////////////////////
 'Connection
-Public Function db(ByRef con As Dao.Database) As DbQuery
+Public Function db(ByRef con As DAO.Database) As DbQuery
     Set mCon = CurrentDb
     Set db = Me
 End Function

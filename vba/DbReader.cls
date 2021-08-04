@@ -9,12 +9,14 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Compare Database
 Option Explicit
+'-----------------------
+' auth : t.ichi
+'-----------------------
 
 Public ModeDebugLog As Boolean
 Public ModeErrorLog As Boolean
 Public LastError As String  'ç≈å„Ç…î≠ê∂ÇµÇΩErrorÇäiî[
-Private mRs As Dao.Recordset
-Private util As New UtilsString
+Private mRs As DAO.Recordset
 Private mFind As Boolean
 Private mReaded As Boolean
 Private mEOF As Boolean
@@ -40,22 +42,22 @@ On Error GoTo ex
 ex:
 End Sub
 Private Sub ErrorProc(ByVal Key As String)
-    Dim log As String
+    Dim Log As String
     LastError = """" & Key & """ " & err.Description & vbCrLf
-    log = "# " & Now & vbCrLf
-    log = log & "[DbReader]ErrorProc ======" & vbCrLf
-    log = log & LastError
-    log = log & "========================="
-    Debug.Print log
-    If ModeErrorLog Then: AppendLog "error", log
+    Log = "# " & Now & vbCrLf
+    Log = Log & "[DbReader]ErrorProc ======" & vbCrLf
+    Log = Log & LastError
+    Log = Log & "========================="
+    Debug.Print Log
+    If ModeErrorLog Then: AppendLog "error", Log
 End Sub
-Private Sub AppendLog(ByVal fName As String, ByVal log As String)
+Private Sub AppendLog(ByVal fName As String, ByVal Log As String)
 On Error GoTo ex:
     Dim fso As Object
     Dim f As Object
     Set fso = CreateObject("Scripting.FileSystemObject")
     Set f = fso.OpenTextFile(LOG_DIR & "." & fName & ".log", 8, True)
-    Call f.WriteLine(log & vbCrLf)
+    Call f.WriteLine(Log & vbCrLf)
 ex:
     If Not fso Is Nothing Then: Set fso = Nothing
     If Not f Is Nothing Then: f.Close: Set f = Nothing
@@ -69,7 +71,7 @@ ex: Call ErrorProc(Key)
 End Function
 
 
-Public Sub SetRecordset(ByRef rs As Dao.Recordset, Optional ByVal autoReadFirst As Boolean = False)
+Public Sub SetRecordset(ByRef rs As DAO.Recordset, Optional ByVal autoReadFirst As Boolean = False)
     Set mRs = rs
     mReaded = False
     mFind = False
@@ -119,15 +121,15 @@ Public Function Sets(ByVal Key As String, ByRef ctrl As Control, Optional ByVal 
     If cn = "Label" Then
         ctrl.Text = v
     ElseIf cn = "TextBox" Then
-        ctrl.value = v
+        ctrl.Value = v
     ElseIf cn = "CheckBox" Then
         If Nz(v, "") = "" Then
-            ctrl.value = False
+            ctrl.Value = False
         Else
-            ctrl.value = CBool(v)
+            ctrl.Value = CBool(v)
         End If
     Else
-        ctrl.value = v
+        ctrl.Value = v
     End If
     Set Sets = Me
 End Function
@@ -144,7 +146,7 @@ Public Function GetStr(ByVal Key As String, Optional ByVal nullVal As String = "
     If EOF Then
         GetStr = nullVal
     Else
-        GetStr = util.ToString(mGet(Key), nullVal)
+        GetStr = ToString(mGet(Key), nullVal)
     End If
 End Function
 
@@ -152,7 +154,7 @@ Public Function GetInt(ByVal Key As String, Optional ByVal nullVal As Integer = 
     If EOF Then
         GetInt = nullVal
     Else
-        GetInt = util.ToInt(mGet(Key), nullVal)
+        GetInt = ToInt(mGet(Key), nullVal)
     End If
 End Function
 
@@ -160,7 +162,7 @@ Public Function GetLong(ByVal Key As String, Optional ByVal nullVal As Long = 0)
     If EOF Then
         GetLong = nullVal
     Else
-        GetLong = util.ToLong(mGet(Key), nullVal)
+        GetLong = ToLong(mGet(Key), nullVal)
     End If
 End Function
 
@@ -168,14 +170,14 @@ Public Function GetDouble(ByVal Key As String, Optional ByVal nullVal As Double 
     If EOF Then
         GetDouble = nullVal
     Else
-        GetDouble = util.ToDouble(mGet(Key), nullVal)
+        GetDouble = ToDouble(mGet(Key), nullVal)
     End If
 End Function
 Public Function GetBoole(ByVal Key As String, Optional ByVal nullVal As Boolean = False) As Boolean
     If EOF Then
         GetBoole = nullVal
     Else
-        Dim v As String: v = StrConv(util.ToString(mGet(Key)), vbUpperCase)
+        Dim v As String: v = StrConv(ToString(mGet(Key)), vbUpperCase)
         GetBoole = v = "TRUE"
     End If
 End Function
