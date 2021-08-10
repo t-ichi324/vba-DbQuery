@@ -42,22 +42,22 @@ On Error GoTo ex
 ex:
 End Sub
 Private Sub ErrorProc(ByVal Key As String)
-    Dim Log As String
-    LastError = """" & Key & """ " & err.Description & vbCrLf
-    Log = "# " & Now & vbCrLf
-    Log = Log & "[DbReader]ErrorProc ======" & vbCrLf
-    Log = Log & LastError
-    Log = Log & "========================="
-    Debug.Print Log
-    If ModeErrorLog Then: AppendLog "error", Log
+    Dim log As String
+    LastError = """" & Key & """ " & Err.Description & vbCrLf
+    log = "# " & Now & vbCrLf
+    log = log & "[DbReader]ErrorProc ======" & vbCrLf
+    log = log & LastError
+    log = log & "========================="
+    Debug.Print log
+    If ModeErrorLog Then: AppendLog "error", log
 End Sub
-Private Sub AppendLog(ByVal fName As String, ByVal Log As String)
+Private Sub AppendLog(ByVal fName As String, ByVal log As String)
 On Error GoTo ex:
     Dim fso As Object
     Dim f As Object
     Set fso = CreateObject("Scripting.FileSystemObject")
     Set f = fso.OpenTextFile(LOG_DIR & "." & fName & ".log", 8, True)
-    Call f.WriteLine(Log & vbCrLf)
+    Call f.WriteLine(log & vbCrLf)
 ex:
     If Not fso Is Nothing Then: Set fso = Nothing
     If Not f Is Nothing Then: f.Close: Set f = Nothing
@@ -119,7 +119,7 @@ Public Function Sets(ByVal Key As String, ByRef ctrl As Control, Optional ByVal 
     Dim cn As String: cn = TypeName(ctrl)
     Dim v As String: v = GetStr(Key, nullVal)
     If cn = "Label" Then
-        ctrl.Text = v
+        ctrl.text = v
     ElseIf cn = "TextBox" Then
         ctrl.Value = v
     ElseIf cn = "CheckBox" Then
@@ -186,7 +186,11 @@ End Function
 'VariantÇã≠êßìIÇ…ï∂éöå^Ç÷ïœä∑Ç∑ÇÈ
 '==============================================================================
 Private Function ToString(ByVal v As Variant, Optional ByVal nullVal As String = "") As String
-    If v Is Nothing Or IsNull(v) Then
+    If IsNull(v) Then
+        ToString = nullVal
+        Exit Function
+    End If
+    If IsEmpty(v) Then
         ToString = nullVal
         Exit Function
     End If
